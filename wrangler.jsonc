@@ -10,7 +10,7 @@
 	"kv_namespaces": [
 		{
 			"binding": "EDGE_STATS",
-			"id": "59a4926c56c04fb8ab5dc33c446378f8"
+			"id": "${EDGE_STATS_KV_ID}"
 		}
 	],
 	"observability": {
