@@ -24,6 +24,7 @@ function getCf(request: Request): Cf {
 
 function msLabel(ms: number | null | undefined) {
   if (ms == null || Number.isNaN(ms)) return "—";
+  if (ms === 0) return "<1 ms";
   return `${Math.round(ms)} ms`;
 }
 
@@ -264,8 +265,15 @@ export default {
 
     if (url.pathname === "/og.png") {
       const cf = getCf(request);
-      const rtt = cf.clientTcpRtt ? Math.round(cf.clientTcpRtt) : null;
-      const v = verdict(rtt ?? undefined);
+      const params = url.searchParams;
+
+      // Use params if provided (for social sharing), else cf data
+      const rtt = params.get("rtt") ? parseInt(params.get("rtt")!) : (cf.clientTcpRtt ? Math.round(cf.clientTcpRtt) : null);
+      const colo = params.get("colo") || cf.colo || null;
+      const emoji = params.get("emoji") || null;
+      const label = params.get("label") || null;
+
+      const v = emoji && label ? { emoji, label } : verdict(rtt ?? undefined);
 
       const svg = `
       <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
@@ -287,7 +295,7 @@ export default {
         </text>
 
         <text x="80" y="320" font-size="96" fill="#e8eefc" font-family="system-ui">
-          ${v.emoji} ${rtt ? `${rtt} ms` : "—"}
+          ${v.emoji} ${rtt !== null && rtt !== undefined ? (rtt === 0 ? "<1ms" : `${rtt} ms`) : "—"}
         </text>
 
         <text x="80" y="380" font-size="36" fill="#9fb0d0" font-family="system-ui">
@@ -295,7 +303,7 @@ export default {
         </text>
 
         <text x="80" y="460" font-size="28" fill="#7aa2ff" font-family="system-ui">
-          Served from colo: ${cf.colo ?? "—"}
+          Served from colo: ${colo ?? "—"}
         </text>
 
         <text x="80" y="560" font-size="22" fill="#9fb0d0" font-family="system-ui">
@@ -328,17 +336,19 @@ export default {
     // Record stats for main page visits
     ctx.waitUntil(recordRun(env, cf, edgeRtt));
 
+    const ogImageUrl = `/og.png?rtt=${edgeRtt ?? ''}&colo=${encodeURIComponent(cf.colo ?? '')}&emoji=${encodeURIComponent(v.emoji)}&label=${encodeURIComponent(v.label)}`;
+
     const html = `<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta property="og:title" content="How close are you to the internet edge?" />
 <meta property="og:description" content="Measure your real distance (ms) to Cloudflare’s edge — compare globally." />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="/og.png" />
+<meta property="og:image" content="${escapeHtml(ogImageUrl)}" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="/og.png" />
+<meta name="twitter:image" content="${escapeHtml(ogImageUrl)}" />
 <title>EdgeCheck ⚡</title>
 <style>
 :root{--bg:#0b0f19;--card:#121a2a;--text:#e8eefc;--muted:#9fb0d0}
