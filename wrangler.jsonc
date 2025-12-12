@@ -7,6 +7,12 @@
 	"name": "edgecheck",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-12-11",
+	"kv_namespaces": [
+		{
+			"binding": "EDGE_STATS",
+			"id": "59a4926c56c04fb8ab5dc33c446378f8"
+		}
+	],
 	"observability": {
 		"enabled": true
 	}
