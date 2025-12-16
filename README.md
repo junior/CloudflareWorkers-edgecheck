@@ -2,6 +2,16 @@
 
 A Cloudflare Worker that measures and displays edge latency (RTT) from your location to Cloudflare's global network. It provides real-time insights into your connection speed to the nearest edge server, along with location data and performance statistics.
 
+![EdgeCheck Screenshot](edgecheck.png)
+
+## What this project shows
+
+- Workers routing
+- Geo (request.cf)
+- Stats (Workers KV ~~Durable Objects~~)
+- Edge caching
+- On-the-fly image generation
+
 ## Features
 
 - **Real-time Latency Measurement**: Measures round-trip time (RTT) to Cloudflare's edge servers
@@ -9,6 +19,7 @@ A Cloudflare Worker that measures and displays edge latency (RTT) from your loca
 - **Performance Verdict**: Provides emoji-based feedback on connection speed
 - **Statistics Tracking**: Aggregates daily performance data across users
 - **Shareable Results**: Copy and share your edge check results
+- **On-the-fly Image Generation**: Generates performance summary Open Graph images dynamically, compatible with social media sharing
 - **Responsive Design**: Clean, mobile-friendly HTML interface
 
 ## Setup
@@ -34,6 +45,7 @@ A Cloudflare Worker that measures and displays edge latency (RTT) from your loca
    ```
 
 3. Generate TypeScript types for Cloudflare Workers:
+
    ```bash
    npm run cf-typegen
    ```
@@ -43,6 +55,7 @@ A Cloudflare Worker that measures and displays edge latency (RTT) from your loca
 ### Development
 
 Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -52,6 +65,7 @@ This will start a local development server at `http://localhost:8787`.
 ### Testing
 
 Run the test suite:
+
 ```bash
 npm test
 ```
