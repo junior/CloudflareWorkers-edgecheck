@@ -22,6 +22,10 @@ A Cloudflare Worker that measures and displays edge latency (RTT) from your loca
 - **On-the-fly Image Generation**: Generates performance summary Open Graph images dynamically, compatible with social media sharing
 - **Responsive Design**: Clean, mobile-friendly HTML interface
 
+## Live demo
+
+Try it out yourself: [https://edgecheck.add.workers.dev](https://edgecheck.add.workers.dev)
+
 ## Quickstart
 
 If you want to get started quickly, click on the button below.
